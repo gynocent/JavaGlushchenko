@@ -1,5 +1,7 @@
 package bouquet;
 
+import bouquet.exception.NotEnoughFlowersException;
+import bouquet.exception.NotEnoughPriceException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,12 +11,20 @@ import java.util.List;
 @Data
 @EqualsAndHashCode
 public class Bouquet implements Presentable {//имплементация интерфейса
+    private static final int MIN_PRICE = 15;
+    private static final int MIN_FLOWER_NUMBER = 1;
     private List<Flower> flowers;
     private Wrapper wrapper;
     private double price;
 
     public Bouquet(List<Flower> flowers, Wrapper wrapper, double price) {
         this.flowers = flowers;
+        if (flowers.size() < MIN_FLOWER_NUMBER) {
+            throw  new NotEnoughFlowersException("Not enough flowers for bouquet");
+        }
+        if (price < MIN_PRICE) {
+            throw new NotEnoughPriceException("Price is too low");
+        }
         this.wrapper = wrapper;
         this.price = price;
     }
