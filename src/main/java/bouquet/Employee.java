@@ -1,6 +1,13 @@
 package bouquet;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 //абстрактный класс
+@Getter
+@Setter
+@ToString
 public abstract class Employee {
     private String name;
     private String surname;
@@ -14,17 +21,7 @@ public abstract class Employee {
         this.age = age;
     }
 
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", experience=" + experience +
-                ", age=" + age +
-                '}';
-    }
-
     public String work() {
-        return "I'm working ";
+        return "I'm working";
     }
 }
