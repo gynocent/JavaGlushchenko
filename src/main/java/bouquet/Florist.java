@@ -17,6 +17,9 @@ public class Florist extends Employee {
         super(name, surname, experience, age);
     }
 
+    public Florist() {
+    }
+
     public Bouquet createBouquet(List<Flower> flowers, Bouquet.Wrapper wrapper) {
         if (flowers.size() < MIN_NUMBER) {
             throw new NotEnoughFlowersException("Not enough flowers for the bouquet!!!");
@@ -24,6 +27,18 @@ public class Florist extends Employee {
         Bouquet bouquet = new Bouquet(flowers, wrapper);
         setPrice(bouquet);
         return bouquet;
+    }
+
+    public double sellBouquets(List<Bouquet> bouquets) {
+        double sum = 0;
+        for (Bouquet bouquet : bouquets) {
+            if (bouquet.getFlowers().size() < MIN_NUMBER) {
+                throw new NotEnoughFlowersException("Not enough flowers for the bouquet!!!");
+            }
+            setPrice(bouquet);
+            sum += bouquet.getPrice();
+        }
+        return sum;
     }
 
     private double setPrice(Bouquet bouquet) {
