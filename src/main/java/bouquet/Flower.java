@@ -14,4 +14,13 @@ public class Flower {
         this.colour = colour;
         this.typeOfFlower = typeOfFlower;
     }
+
+    @Override
+    public String toString() {
+        return "Flower{" +
+                "colour=" + colour +
+                ", size=" + size +
+                ", typeOfFlower=" + typeOfFlower +
+                '}';
+    }
 }

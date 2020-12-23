@@ -1,25 +1,17 @@
 package bouquet;
 
 import bouquet.exception.NotEnoughFlowersException;
-import bouquet.exception.NotEnoughPriceException;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
 public class MockitoTest {
-    @Mock
-    private Flower myFlower;
-    @Mock
-    private Bouquet.Wrapper myWrapper;
+    private Flower myFlower = mock(Flower.class);
+    private Bouquet.Wrapper myWrapper = mock(Bouquet.Wrapper.class);
     private Florist florist = new Florist("David", "Hlushko", 5, 45);
 
     @Test
@@ -28,6 +20,7 @@ public class MockitoTest {
         when(myFlower.getTypeOfFlower()).thenReturn(TypeOfFlower.ROSE);
         Bouquet bouquet = florist.createBouquet(flowers, myWrapper);
         Assert.assertEquals(flowers, bouquet.getFlowers());
+        verify(myFlower, times(6)).getTypeOfFlower();
     }
 
     @Test(expected = NotEnoughFlowersException.class)
@@ -36,23 +29,6 @@ public class MockitoTest {
         when(myFlower.getTypeOfFlower()).thenReturn(TypeOfFlower.ROSE);
         Bouquet bouquet = florist.createBouquet(flowers, myWrapper);
         Assert.assertEquals(flowers, bouquet.getFlowers());
-    }
-
-    @Test(expected = NotEnoughPriceException.class)
-    public void ConstructorTest_CreatesBouquet_ThrowsLowPriceException() {
-        List<Flower> flowers = List.of(myFlower);
-        new Bouquet(flowers, myWrapper, 10);
-    }
-
-    @Test(expected = NotEnoughFlowersException.class)
-    public void ConstructorTest_CreatesBouquet_ThrowsFewFlowersException() {
-        List<Flower> flowers = new ArrayList<>();
-        new Bouquet(flowers, myWrapper, 15);
-    }
-
-    @Test
-    public void ConstructorTest_CreatesBouquet_Ok() {
-        List<Flower> flowers = List.of(myFlower);
-        new Bouquet(flowers, myWrapper, 15);
+        verify(myFlower).getTypeOfFlower().getPrice();
     }
 }

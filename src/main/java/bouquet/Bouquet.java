@@ -1,40 +1,74 @@
 package bouquet;
 
-import bouquet.exception.NotEnoughFlowersException;
-import bouquet.exception.NotEnoughPriceException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Iterator;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @EqualsAndHashCode
 public class Bouquet implements Presentable {//имплементация интерфейса
-    private static final int MIN_PRICE = 15;
-    private static final int MIN_FLOWER_NUMBER = 1;
     private List<Flower> flowers;
     private Wrapper wrapper;
     private double price;
 
-    public Bouquet(List<Flower> flowers, Wrapper wrapper, double price) {
-        this.flowers = flowers;
-        if (flowers.size() < MIN_FLOWER_NUMBER) {
-            throw  new NotEnoughFlowersException("Not enough flowers for bouquet");
-        }
-        if (price < MIN_PRICE) {
-            throw new NotEnoughPriceException("Price is too low");
-        }
-        this.wrapper = wrapper;
-        this.price = price;
-    }
-
     public Bouquet(List<Flower> flowers, Wrapper wrapper) {
         this.flowers = flowers;
         this.wrapper = wrapper;
+        setPrice(getSumOfBouquetStreamMethod());
     }
 
     public Bouquet() {
+    }
+
+    public double getSumOfBouquetStreamMethod() {
+        double price = getFlowers()
+                .stream()
+                .map(f -> f.getTypeOfFlower().getPrice())
+                .reduce(0D, Double::sum);
+        setPrice(price);
+        return price;
+    }
+
+    public Flower getTheMostExpensiveFlower() {
+        return getFlowers()
+                .stream()
+                .max(Comparator.comparing(f -> f.getTypeOfFlower().getPrice()))
+                .orElseThrow(RuntimeException::new);
+    }
+
+    public Flower getTheCheapestFlower() {
+        return getFlowers()
+                .stream()
+                .min(Comparator.comparing(f -> f.getTypeOfFlower().getPrice()))
+                .orElseThrow(RuntimeException::new);
+    }
+
+    public Double getTheAveragePriceOfBouquets() {
+        return getFlowers()
+                .stream()
+                .mapToDouble(f -> f.getTypeOfFlower().getPrice())
+                .average()
+                .orElseThrow(RuntimeException::new);
+    }
+
+    public Map<String, List<Flower>> getAppropriateFlowers(Colour color) {
+        Map<String, List<Flower>> map = new HashMap<>();
+        List<Flower> appropriateFlowers = getFlowers()
+                .stream()
+                .filter(f -> f.getColour().equals(color))
+                .collect(Collectors.toList());
+        map.put("Подходит", appropriateFlowers);
+        List<Flower> notAppropriateFlowers = getFlowers()
+                .stream()
+                .filter(e -> !appropriateFlowers.contains(e))
+                .collect(Collectors.toList());
+        map.put("Не подходит", notAppropriateFlowers);
+        map.forEach((k, v) -> System.out.println(k + ": " + v));
+        return map;
     }
 
     @Override
@@ -68,7 +102,7 @@ public class Bouquet implements Presentable {//имплементация инт
         Iterator<Flower> iterator = exhibits.iterator();
         while (iterator.hasNext()) {
             Flower flower = iterator.next();
-            System.out.println(flower + TypeOfFlower.showTypeOfFlower());
+            System.out.println(flower + flower.getTypeOfFlower().showTypeOfFlower());
         }
     }
 }

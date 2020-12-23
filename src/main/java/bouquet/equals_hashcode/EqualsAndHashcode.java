@@ -1,7 +1,6 @@
 package bouquet.equals_hashcode;
 
-import bouquet.Florist;
-import bouquet.Flower;
+import bouquet.*;
 
 public class EqualsAndHashcode {
 
